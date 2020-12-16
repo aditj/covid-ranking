@@ -1,7 +1,7 @@
 // Setting Dimensions
-var margin={top:20,right:20,bottom:30,left:50},
+var margin={top:20,right:20,bottom:70,left:50},
 width = 960 - margin.left - margin.right,
-height = 500 - margin.top - margin.bottom;
+height = 600 - margin.top - margin.bottom;
 // parse date/time
 var parseTime=d3.timeParse("%d-%b-%y");
 // Set the range
@@ -48,7 +48,6 @@ d3.csv("data.csv").then(function(data) {
     // Scale the range of the data
     x.domain([40,d3.max(data, function(d) { return d.cases; })]);
     y.domain(d3.extent(data,function(d) { return d.spend_all; }));
-    console.log(d3.min(data,function(d) { return d.spend_all; }))
            
     // Add the scatterplot
     svg.selectAll("dot")
@@ -74,9 +73,22 @@ d3.csv("data.csv").then(function(data) {
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x));
-  
+    // X axis label
+    svg.append("text")             
+        .attr("transform",
+              "translate(" + (width/2) + " ," + 
+                             (height + 50) + ")")
+        .style("text-anchor", "middle")
+        .text("Covid Cases per Capita (log scale)");
     // Add the Y Axis
     svg.append("g")
         .call(d3.axisLeft(y));
-  
+    // text label for the y axis
+    svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Change in Consumer Spending");      
   });
