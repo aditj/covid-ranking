@@ -1,0 +1,13 @@
+/* Desktop */
+div.tooltip {
+    position: absolute;
+    background-color: white;
+    padding: 1%;
+    border-radius: 5%;
+    font-weight: 800;
+}
+
+#county-info{
+    width: 30%;
+ 
+}
