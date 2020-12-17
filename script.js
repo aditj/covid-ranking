@@ -2,8 +2,6 @@
 var margin={top:20,right:20,bottom:70,left:50},
 width = 960 - margin.left - margin.right,
 height = 600 - margin.top - margin.bottom;
-// parse date/time
-var parseTime=d3.timeParse("%d-%b-%y");
 // Set the range
 var x=d3.scaleLinear().range([0,width]);
 var y=d3.scaleLinear().range([height,0]);
@@ -30,6 +28,13 @@ function get_stats(d){
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
+
+
+
+function plotScatter(y_sel){
+// Get the data
+d3.selectAll("svg").remove();
+
 var svg = d3.select("#container-scatter").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -38,19 +43,17 @@ var svg = d3.select("#container-scatter").append("svg")
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
-// Get the data
 d3.csv("data.csv").then(function(data) {
-
     // format the data
     data.forEach(function(d) {
         d.casesper100k = +d.casesper100k;
-        d.spend_all=+d.spend_all
+        d[y_sel]=+d[y_sel]
     });
 
   
     // Scale the range of the data
     x.domain([0,d3.max(data, function(d) { return d.casesper100k; })]);
-    y.domain(d3.extent(data,function(d) { return d.spend_all; }));
+    y.domain(d3.extent(data,function(d) { return d[y_sel]; }));
            
     // Add the scatterplot
     svg.selectAll("dot")
@@ -58,7 +61,7 @@ d3.csv("data.csv").then(function(data) {
       .enter().append("circle")
         .attr("r", 5)
         .attr("cx", function(d) { return x(d.casesper100k); })
-        .attr("cy", function(d) { return y(d.spend_all); })
+        .attr("cy", function(d) { return y(d[y_sel]); })
         .on("mouseover", function(d) {
             div.transition()
             .duration(200)
@@ -94,4 +97,12 @@ d3.csv("data.csv").then(function(data) {
     .attr("dy", "1em")
     .style("text-anchor", "middle")
     .text("Change in Consumer Spending");      
+  });
+}
+// Which covariate
+var y_sel=$('select').val()
+$('select').on('change', function() {
+    y_sel= this.value ;
+    plotScatter(y_sel);
+
   });
