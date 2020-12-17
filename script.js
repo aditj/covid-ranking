@@ -5,7 +5,7 @@ height = 600 - margin.top - margin.bottom;
 // parse date/time
 var parseTime=d3.timeParse("%d-%b-%y");
 // Set the range
-var x=d3.scaleLog().range([0,width]);
+var x=d3.scaleLinear().range([0,width]);
 var y=d3.scaleLinear().range([height,0]);
 // Tooltip
 var div = d3.select("body").append("div")
@@ -19,8 +19,11 @@ function get_stats(d){
     s+="</span></li><li>Median Age <span id='#median-age'>";
     s+=String(d.median_age);
     s+="</span></li><li>Percent African Americans <span id='#pct-black'>";
+    s+=String(d.afr);
     s+="</span></li><li>Percent Hispanics <span id='#pop-hispanics'>";
-    s+="</span> </li><li>Percent Population over 60 <span id='#pop-over60'>";
+    s+=String(d.hisp);
+    s+="</span> </li><li>Percent Population over 55 <span id='#pop-over60'>";
+    s+=String(d.over65);
     s+="</span> </li></ul>";
     return s;
 }
@@ -40,13 +43,13 @@ d3.csv("data.csv").then(function(data) {
 
     // format the data
     data.forEach(function(d) {
-        d.cases = +d.cases;
+        d.casesper100k = +d.casesper100k;
         d.spend_all=+d.spend_all
     });
 
   
     // Scale the range of the data
-    x.domain([40,d3.max(data, function(d) { return d.cases; })]);
+    x.domain([0,d3.max(data, function(d) { return d.casesper100k; })]);
     y.domain(d3.extent(data,function(d) { return d.spend_all; }));
            
     // Add the scatterplot
@@ -54,7 +57,7 @@ d3.csv("data.csv").then(function(data) {
         .data(data)
       .enter().append("circle")
         .attr("r", 5)
-        .attr("cx", function(d) { return x(d.cases); })
+        .attr("cx", function(d) { return x(d.casesper100k); })
         .attr("cy", function(d) { return y(d.spend_all); })
         .on("mouseover", function(d) {
             div.transition()
@@ -79,7 +82,7 @@ d3.csv("data.csv").then(function(data) {
               "translate(" + (width/2) + " ," + 
                              (height + 50) + ")")
         .style("text-anchor", "middle")
-        .text("Covid Cases per Capita (log scale)");
+        .text("Covid Cases per 100k");
     // Add the Y Axis
     svg.append("g")
         .call(d3.axisLeft(y));
