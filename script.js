@@ -101,6 +101,8 @@ d3.csv("data.csv").then(function(data) {
 }
 // Which covariate
 var y_sel=$('select').val()
+plotScatter(y_sel);
+
 $('select').on('change', function() {
     y_sel= this.value ;
     plotScatter(y_sel);
