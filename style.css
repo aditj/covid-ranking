@@ -7,7 +7,49 @@ div.tooltip {
     font-weight: 800;
 }
 
+.date{
+    border-left: 1px solid black;
+    padding: 1%;
+    text-align: center;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+
+}
+.date-selected{
+    background-color: black;
+    color: white;
+}
+#dragger{
+    border: 2px solid black;
+    padding: 1%;
+}
+#month-sel{
+    margin:auto;
+    width: 60%;
+    margin-top: 1%;
+}
+#filters{
+    margin: auto;
+    text-align: center;
+}
+#container-scatter{
+    text-align: center;
+}
+.stats{
+    border-bottom: 1px solid black;
+}
+.stats-header{
+    font-size: large;
+}
+.stats-content{
+    text-align: right;
+    font-size: large;
+}
 #county-info{
-    width: 30%;
- 
+    margin: auto;
+}
+#cases-line{
+    text-align: center;
 }
