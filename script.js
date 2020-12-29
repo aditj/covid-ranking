@@ -205,7 +205,7 @@ $('select#state').on('change', function () {
     plotScatter(y_sel,month_sel,state_sel);
 
 });
-$("div#month-sel>div").click(function () {
+$("div#month-sel-buttons>div").click(function () {
     $(".date").removeClass("date-selected");
     $(this).addClass("date-selected");
     month_sel=parseInt($(this).attr("data-value"));
