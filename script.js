@@ -9,9 +9,20 @@ var y = d3.scaleLinear().range([height, 0]);
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
+
+yTitles={
+    'spend_all':'Change in Consumer Spending',
+    'emp_combined':'Change in Employement',
+    'revenue_all':'Change in Small Business Revenue'
+}
+
+formatComma = d3.format(",");
+
 function get_stats(d) {
+    $("#countyname").html(d.county+", "+d.state);
     $("#pop_density").html(String(Math.round(d.pop_density*10)/10) +" per sq. mile");
-    $("#median_income").html(String(Math.round(d.median_income*10)/10)+" $");
+    $("#pop").html(String(formatComma(Math.round(d.pop*10)/10) ));
+    $("#median_income").html(String(formatComma(Math.round(d.median_income*10)/10))+" $");
     $("#median_age").html(String(Math.round(d.median_age*10)/10) +" years");
     $("#pct_min").html(String(Math.round(d.pct_min*10)/10) +" %");
     $("#over60").html(String(Math.round(d.over60*10)/10) + " %");
@@ -45,20 +56,19 @@ function plotLine(fips){
  
  var line = d3.line()
    .x(function(d) { return x(d.date); })
-   .y(function(d) { return y(d.cases); });
+   .y(function(d) { return y(d.new_cases); });
  
- d3.csv('dailydata/'+fips+'.csv').then(function(data){
+ d3.csv('dailydata/'+parseInt(fips)+'.csv').then(function(data){
     data.forEach(function (d) {
         d.date = parseTime(d.date);
-        d.cases = +d.cases;
-       
+        d.new_cases = +d.new_cases;
 
 
     });
    
 
  x.domain(d3.extent(data, function(d) { return d.date; }));
- y.domain(d3.extent(data, function(d) { return d.cases; }));
+ y.domain(d3.extent(data, function(d) { return d.new_cases; }));
  
    g.append('g')
        .attr('transform', 'translate(0,' + height + ')')
@@ -74,7 +84,7 @@ function plotLine(fips){
        .attr('y', 6)
        .attr('dy', '0.71em')
        .attr('text-anchor', 'end')
-       .text('No Of Cases');
+       .text('Total Case Load');
  
    g.append('path')
      .datum(data)
@@ -97,34 +107,65 @@ function plotScatter(y_sel,month_sel,state_sel) {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .attr("id", "scatter")
-
         .append("g")
         .attr("transform",
             "translate(" + margin.left + "," + margin.top + ")");
+    // ALL YEAR
+    filename=(month_sel==0)?"data-yearly.csv":"data-monthly.csv";
+    d3.csv(filename).then(function (olddata) {
+        popfilter=parseInt($("#pop-filter").val());
 
-    d3.csv("data-monthly.csv").then(function (olddata) {
-     
         if(state_sel=="ALL"){
+            if(month_sel==0){
+                data = olddata.filter(function (d) {
+                
+                    if (d.pop_density>popfilter) {
+        
+                        return d;
+                    }
+        
+                });
+            }
+            else{
             data = olddata.filter(function (d) {
-            
-                if (d.month == month_sel) {
+                
+                if (d.month == month_sel && d.pop_density>popfilter) {
     
                     return d;
                 }
     
             });
         }
+        }
         else{
+            if(month_sel==0){
+                data = olddata.filter(function (d) {
+                
+                    if (d.pop_density>popfilter && d.region==state_sel) {
+        
+                        return d;
+                    }
+        
+                });
+            }
+            else{
             data = olddata.filter(function (d) {
                 
-                if (d.month == month_sel && d.region==state_sel) {
+                if (d.month == month_sel && d.region==state_sel && d.pop_density>popfilter) {
                     console.log(d)
                     return d;
                 }
     
             });
+        }
     }
-
+        if(data.length==0){
+            svg.append("text")
+            .attr("transform","translate("+String(width/2-20)+","+height/2+")")
+            .attr("font-size","30px")
+            .text("Data Unavailable")
+            
+        }
         // format the data
         data.forEach(function (d) {
             d.casesper100k = +d.casesper100k;
@@ -160,22 +201,31 @@ function plotScatter(y_sel,month_sel,state_sel) {
                 plotLine(d.fips)
 
             });
-
+        cases_pos=x(d3.median(data,d=> d.casesper100k))/x(d3.max(data,d=> d.casesper100k));
+        y_pos=y(d3.median(data,d=> d[y_sel]))/y(d3.max(data,d=> d[y_sel]));
+        console.log(cases_pos)
+        console.log(y_pos)
+        svg.append("line")          // attach a line
+    .style("stroke", "black")  // colour the line
+    .attr("x1", x(cases_pos))     // x position of the first end of the line
+    .attr("y1", y(d3.min(data,d=> d[y_sel])))      // y position of the first end of the line
+    .attr("x2", x(cases_pos))     // x position of the second end of the line
+    .attr("y2", y(d3.max(data,d=> d[y_sel]))); 
         // Add the X Axis
         svg.append("g")
-            .attr("transform", "translate(0," + height/2 + ")")
+            .attr("transform", "translate(0," + Math.abs(height/2) + ")")
             .call(d3.axisBottom(x));
         // X axis label
         svg.append("text")
             .attr("transform",
-                "translate(" + (width / 2) + " ," +
+                "translate(" + (width/2) + " ," +
                 (height + 50) + ")")
             .style("text-anchor", "middle")
             .text("Covid Cases per 100k");
         // Add the Y Axis
         svg.append("g")
             .call(d3.axisLeft(y))
-            .attr("transform", "translate("+ width/2 + ",0)");
+            .attr("transform", "translate("+ Math.abs((width*cases_pos)) + ",0)");
 
         // text label for the y axis
         svg.append("text")
@@ -184,7 +234,7 @@ function plotScatter(y_sel,month_sel,state_sel) {
             .attr("x", 0 - (height / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("Change in Consumer Spending");
+            .text(yTitles[y_sel]);
     });
 }
 // Which covariate
@@ -212,6 +262,9 @@ $("div#month-sel-buttons>div").click(function () {
     plotScatter(y_sel,month_sel,state_sel);
 
 });
+$("#pop-filter").on("change",function(){
+    plotScatter(y_sel,month_sel,state_sel);
+})
 
 $("#dragger").draggabilly({
     containment:'#month-sel'
