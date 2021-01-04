@@ -12,13 +12,24 @@
 <body>
     <div class="container-fluid" id="container">
       
-       
+        <div id="header">
+            <h1>
+                Small America might recover faster from the pandemic
+
+            </h1>
+        </div>
+        <hr>
         <div class='row'>
             <div class="col-sm-2" id="filters">
+                <div id="filters-header">
+                    <h2>
+                        Filters
+                    </h2>
+                </div>
+                <div id="filters-inputs">
+                  
                 <div>
-                    <label for="type">
-                        Type of Data:
-                    </label>
+                  
                     <select name="type" id="type-y">
                         <option value="spend_all">Spending Data</option>
                         <option value="emp_combined">Employement Data</option>
@@ -28,9 +39,7 @@
               
                 
                 <div>
-                    <label for="state">
-                        State: 
-                    </label>
+                    
                     <select name="state" id="state" >
                         <option value="ALL" selected="selected">All States</option>
                         <option value="AL">Alabama</option>
@@ -91,20 +100,21 @@
                     <input type="range" name="popfilter" id="pop-filter" min=0 max=17000>
 
                 </div>
+                  
+            </div>
                 
             </div>
             <div class="col-sm-8" id="container-scatter">
-
             </div>
             <div class="col-sm-2"  id='county-info'>
-                <h3>Demographics</h3>
+                <h2>Demographics</h2>
                 <div class="stats">
                     <div class="stats-header">
                         County Name, State
                     </div>
 
                     <div id="countyname" class="stats-content">
-                        
+                        Hover on a county to get stats!
                     </div>
                 </div>
                 <div class="stats">
@@ -167,12 +177,13 @@
         </div>
         <div id='month-sel' >
 
-        <div id="month-sel-header">
-            Select a Month:
-        </div>
+      
+        <button id="play-icon">
+            ▶️
+        </button>
         <div id="month-sel-buttons" class="row">
-            <div class='col-sm date' data-value='0'>All Year</div>
-            <div class='col-sm date date-selected' data-value='1'>January</div>
+            <div class='col-sm date' data-value='0' id="all-year">All Year</div>
+            <div class='col-sm date' data-value='1'>January</div>
             <div class='col-sm date' data-value='2'>February</div>
             <div class='col-sm date' data-value='3'>March</div>
             <div class='col-sm date' data-value='4'>April</div>

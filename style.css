@@ -1,4 +1,16 @@
 /* Desktop */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
+*{
+    font-family: 'Playfair Display', serif;
+}
+h1{
+    font-size: 1.5em;
+}
+#header{
+    font-size: 36px;
+    font-family:'Times New Roman', Times, serif;
+    text-align: center;
+}
 div.tooltip {
     position: absolute;
     background-color: white;
@@ -28,7 +40,6 @@ div.tooltip {
 #month-sel{
     margin:auto;
     width: 60%;
-    margin-top: 1%;
 }
 #month-sel-header{
     font-size: large;
@@ -38,13 +49,22 @@ div.tooltip {
 }
 #filters{
     margin: auto;
+    padding: 1%;
+   border-right: 2px solid black;
+}
+#filters-inputs{
     text-align: center;
+}
+#filters-inputs>div{
+    margin:2%
 }
 #container-scatter{
     text-align: center;
+    border-right: 2px solid black;
 }
 .stats{
-    border-bottom: 1px solid black;
+    border-bottom: 1px dashed black;
+    padding: 2%;
 }
 .stats-header{
     font-size: large;
@@ -58,4 +78,33 @@ div.tooltip {
 }
 #cases-line{
     text-align: center;
+}
+.top-10{
+    fill: lightblue;
+    stroke: black;
+    stroke-width: 1px;
+    transform:scale(1.2, 1.2);
+    opacity: 100%;
+}
+.bottom-10 {
+    fill: yellowgreen;
+    stroke: black;
+    stroke-width: 1px;
+    transform:scale(1.2, 1.2);
+    opacity: 100%;
+}
+.noise{
+    fill: gray;
+    opacity: 40%;
+}
+.median-lines{
+    
+        stroke-width: 2px;
+        stroke: black;
+        stroke-dasharray: 5;
+        opacity: 40%;
+    
+}
+#scatter-legend{
+    margin-top: -40%;
 }
