@@ -125,8 +125,8 @@ svg.append("text")
 // Legend
 svg2= d3.select("#container-scatter")
 .append("svg")
-.attr("width", 100 + margin.left + margin.right)
-.attr("height", 120 + margin.top + margin.bottom)
+.attr("width", 200 + margin.left + margin.right)
+.attr("height", 130 + margin.top + margin.bottom)
 .attr("id", "scatter-legend")
     .append("g")
 svg2.append("text").attr("x", 0).attr("y", 110).text("Legend").style("font-size", "20px").attr("alignment-baseline","middle")
@@ -140,10 +140,10 @@ svg2.append("line").attr("x1", 0)
 .attr("x2", 20) 
 .attr("y2", 200)
 .attr("class","median-lines");
-svg2.append("text").attr("x", 20).attr("y", 130).text("Top 5 Populous Counties").style("font-size", "10px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 20).attr("y", 160).text("Bottom 5 Populous Counties").style("font-size", "10px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 20).attr("y", 180).text("Other Counties").style("font-size", "10px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 20).attr("y", 200).text("Medians of respective Axes").style("font-size", "10px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 20).attr("y", 130).text("Top 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 20).attr("y", 160).text("Bottom 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 20).attr("y", 180).text("Other Counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 20).attr("y", 200).text("Medians of respective Axes").style("font-size", "14px").attr("alignment-baseline","middle")
 
 // Axes
 // Add the X Axis
@@ -178,12 +178,15 @@ svg.append("text")
     .attr("y",0)
     .attr("x",0)
     .attr("dy","1em")
-    .text("BETTER");
+    .text("BETTER")
+    .style("font-size", "14px");
     svg.append("text")
     .attr("y",height)
-    .attr("x",width-20)
+    .attr("x",width-40)
     .attr("dy","1em")
-    .text("WORSE");
+    .text("WORSE")
+    .style("font-size", "14px");
+    
 // Median Lines
 y_pos=0;
 cases_pos=0;
