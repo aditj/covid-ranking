@@ -10,4 +10,4 @@ Project focussed on rating the response of different counties of the United Stat
    2. EconomicTracker-main-> Data from economictracker
    3. nyt-> Covid cases data from NYT
    4. socialexplorer
-    
+### Data Citations

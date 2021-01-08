@@ -2,12 +2,14 @@
 /* *{
     border: 1px solid black;
 } */
-body{
-    height: 100vh
-}
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
-*{
-    font-family: 'Playfair Display', serif;
+body {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+  *{
+    font-family: 'Noto Sans', serif;
 }
 h1{
     font-size: 1.5em;
@@ -133,11 +135,14 @@ div.tooltip {
 }
 footer{
     text-align: center;
-    position: relative;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    /* position: relative; */
     width:100%;
-    left:0;
-    bottom:0;
-    margin-bottom: 0px;
+    /* left:0;
+    bottom:0; */
+    /* height: 50px;
+  margin-top: -50px; */
     font-size:1.2em;
 }
 a{
