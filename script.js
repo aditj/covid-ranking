@@ -1,6 +1,18 @@
+var y_sel = $('select').val();
+    var month_sel = 0;
+    var state_sel = "ALL";
+$(document).ready(function(){
+    var y_sel = $('select').val();
+    var month_sel = 0;
+    var state_sel = "ALL";
+    $("#month-sel").val(0);
+    $("#month-sel").trigger("change");
+    plotScatter(y_sel, month_sel, state_sel);
+    plotLine(10001)
+})
 $('select').prop('selectedIndex', 0); // Reset Select
-// Setting Dimensions
-var margin = { top: 20, right: 20, bottom: 70, left: 50 },
+// Setting Dimensions for Scatter Plot
+var margin = { top: 20, right: 20, bottom: 100, left: 20 },
     width = 600 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 // Set the range
@@ -9,96 +21,21 @@ var y = d3.scaleLinear().range([height, 0]);
 // Tooltip
 var div = d3.select("body").append("div")
     .attr("class", "tooltip")
-    .style("opacity", 0);
+    .style("visibility", "none");
 
-yTitles = {
+var yTitles = {
     'spend_all': 'Change in Consumer Spending',
-    'emp_combined': 'Change in Employement',
+    'emp_combined': 'Change in Employment',
     'revenue_all': 'Change in Small Business Revenue'
 }
 
 formatComma = d3.format(",");
+var symbol = d3.symbol();
 
-function get_stats(d) {
-    $("#countyname").html(d.county + ", " + d.state);
-    $("#pop_density").html(String(Math.round(d.pop_density * 10) / 10) + " per sq. mile");
-    $("#pop").html(String(formatComma(Math.round(d.pop * 10) / 10)));
-    $("#median_income").html(String(formatComma(Math.round(d.median_income * 10) / 10)) + " $");
-    $("#median_age").html(String(Math.round(d.median_age * 10) / 10) + " years");
-    $("#pct_min").html(String(Math.round(d.pct_min * 10) / 10) + " %");
-    $("#over60").html(String(Math.round(d.over60 * 10) / 10) + " %");
-
-}
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
 
-
-var t = d3.transition()
-    .duration(750);
-
-function plotLine(fips) {
-    // Template from https://bl.ocks.org/mbostock/3883245
-    d3.select("svg#linechart").selectAll("*").remove();
-
-
-    var svg = d3.select('#linechart'),
-        margin = { top: 20, right: 20, bottom: 0, left: 50 },
-        width = parseInt(svg.attr("width")) * screen.width / 100 - margin.left - margin.right,
-        height = 130 - margin.top - margin.bottom,
-        g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-    var parseTime = d3.timeParse('%Y-%m-%d');
-    var x = d3.scaleTime()
-        .rangeRound([0, width]);
-
-    var y = d3.scaleLinear()
-        .rangeRound([height, 0]);
-
-    var line = d3.line()
-        .x(function (d) { return x(d.date); })
-        .y(function (d) { return y(d.new_cases); });
-
-    d3.csv('dailydata/' + parseInt(fips) + '.csv').then(function (data) {
-        data.forEach(function (d) {
-            d.date = parseTime(d.date);
-            d.new_cases = +d.new_cases;
-
-
-        });
-
-
-        x.domain(d3.extent(data, function (d) { return d.date; }));
-        y.domain(d3.extent(data, function (d) { return d.new_cases; }));
-
-        g.append('g')
-            .attr('transform', 'translate(0,' + height + ')')
-            .call(d3.axisBottom(x))
-            .select('.domain')
-            .remove();
-
-        g.append('g')
-            .call(d3.axisLeft(y))
-            .append('text')
-            .attr('fill', '#000')
-            .attr('transform', 'rotate(-90)')
-            .attr('y', 6)
-            .attr('dy', '0.71em')
-            .attr('text-anchor', 'end')
-            .text('New Cases per 100k');
-
-        g.append('path')
-            .datum(data)
-            .attr('fill', 'none')
-            .attr('stroke', 'steelblue')
-            .attr('stroke-linejoin', 'round')
-            .attr('stroke-linecap', 'round')
-            .attr('stroke-width', 1.5)
-            .attr('d', line);
-    });
-
-
-}
 
 var pop_rankings;
 $.ajax({
@@ -123,27 +60,30 @@ svg.append("text")
                 .attr("id","data-unavailable");
 
 // Legend
-svg2= d3.select("#container-scatter")
+svg2= d3.select("#container-legend")
 .append("svg")
 .attr("width", 200 + margin.left + margin.right)
-.attr("height", 130 + margin.top + margin.bottom)
+.attr("height", 220 + margin.top + margin.bottom)
 .attr("id", "scatter-legend")
-    .append("g")
-svg2.append("text").attr("x", 0).attr("y", 110).text("Legend").style("font-size", "20px").attr("alignment-baseline","middle")
-
-svg2.append("circle").attr("cx",10).attr("cy",105).attr("r", 5).attr("class","top-10");
-svg2.append("circle").attr("cx",10).attr("cy",130).attr("r", 5).attr("class","bottom-10");
+//svg2=    d3.select("#container-scatter>svg").append("g")
+svg2.append("text").attr("x", 0).attr("y", 95).text("Legend").style("font-size", "20px").attr("alignment-baseline","middle")
+svg2.append("circle").attr("cx",10).attr("cy",125).attr("r", 5).attr("class","top-10");
+svg2.append("circle").attr("cx",10).attr("cy",155).attr("r", 5).attr("class","bottom-10");
 svg2.append("circle").attr("cx",10).attr("cy",175).attr("r", 5).attr("class","noise");
-
-svg2.append("line").attr("x1", 0) 
+svg2.append("line")
 .attr("y1", 200)
 .attr("x2", 20) 
 .attr("y2", 200)
 .attr("class","median-lines");
-svg2.append("text").attr("x", 20).attr("y", 130).text("Top 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 20).attr("y", 160).text("Bottom 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 20).attr("y", 180).text("Other Counties").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 20).attr("y", 200).text("Medians of respective Axes").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("path")
+.attr("d",symbol.type(d3.symbolStar))
+.attr("class" , 'top-county')
+.attr("transform","translate(15,225)");
+svg2.append("text").attr("x", 30).attr("y", 130).text("Top 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 160).text("Bottom 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 180).text("Other Counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 200).text("Medians of respective Axes").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 230).text("Good Performing Counties*").style("font-size", "14px").attr("alignment-baseline","middle")
 
 // Axes
 // Add the X Axis
@@ -173,19 +113,19 @@ y_title=svg.append("text")
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .style("text-anchor", "middle");
-// Better and Worse 
-svg.append("text")
-    .attr("y",0)
-    .attr("x",0)
-    .attr("dy","1em")
-    .text("BETTER")
-    .style("font-size", "14px");
-    svg.append("text")
-    .attr("y",height)
-    .attr("x",width-40)
-    .attr("dy","1em")
-    .text("WORSE")
-    .style("font-size", "14px");
+// // Better and Worse 
+// svg.append("text")
+//     .attr("y",0)
+//     .attr("x",0)
+//     .attr("dy","1em")
+//     .text("BETTER")
+//     .style("font-size", "14px");
+//     svg.append("text")
+//     .attr("y",height)
+//     .attr("x",width-40)
+//     .attr("dy","1em")
+//     .text("WORSE")
+//     .style("font-size", "14px");
     
 // Median Lines
 y_pos=0;
@@ -196,13 +136,7 @@ vertical_median=svg.append("line")
     .attr("x2", cases_pos*width) 
     .attr("y2", height)
     .attr("class","median-lines");
-// svg.append("text")
-//     .attr("transform", "rotate(-90)")
-//     .attr("y", cases_pos*width)
-//     .attr("x",-20)
-//     .attr("dy", "1em")
-//     .style("text-anchor", "middle")
-//     .text("median");
+
 
 horizontal_median=svg.append("line")
     .attr("x1", 0) 
@@ -210,13 +144,134 @@ horizontal_median=svg.append("line")
     .attr("x2", width) 
     .attr("y2", height*y_pos)
     .attr("class","median-lines");
-// svg.append("text")
-//     .attr("transform",
-//         "translate(" + 15 + " ," +
-//         (height*y_pos +12 ) + ")")
-//     .style("text-anchor", "middle")
-//     .text("median");
 
+
+
+var t = d3.transition()
+    .duration(750);
+
+
+// Which covariate
+setTimeout(()=>$("#all-year").click(),1000);
+
+
+$('select#type-y').on('change', function () {
+    y_sel = $('#type-y').val();
+
+    plotScatter(y_sel, month_sel, state_sel);
+
+});
+$('select#state').on('change', function () {
+    state_sel = $('#state').val();
+
+    plotScatter(y_sel, month_sel, state_sel);
+
+});
+$("#month-sel").on('change',function () {
+   $(".date").removeClass("date-selected");
+   month_sel = parseInt($(this).val());
+    $("div.date[data-value='" + month_sel +"']").addClass("date-selected");
+
+    plotScatter(y_sel, month_sel, state_sel);
+
+});
+
+$("#pop-filter").on("change", function () {
+    plotScatter(y_sel, month_sel, state_sel);
+})
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  
+// $("#play-icon").click(function() {
+//     $('.date').each(async function(i) {
+//         await sleep(800*i++);
+//             $(this).click();
+            
+//      })
+//   });
+
+function plotLine(fips) {
+    // Template from https://bl.ocks.org/mbostock/3883245
+    d3.select("svg#linechart").selectAll("*").remove();
+
+
+    var svg = d3.select('#linechart'),
+        margin = { top: 20, right: 40, bottom: 0, left: 30 },
+        width = parseInt(svg.attr("width"))  - margin.left - margin.right,
+        height = 130 - margin.top - margin.bottom,
+        g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+    var parseTime = d3.timeParse('%Y-%m-%d');
+    var x = d3.scaleTime()
+        .rangeRound([0, width]);
+
+    var y = d3.scaleLinear()
+        .rangeRound([height, 0]);
+
+    var line = d3.line()
+        .x(function (d) { return x(d.date); })
+        .y(function (d) { return y(d.new_cases); });
+
+    d3.csv('dailydata/' + parseInt(fips) + '.csv').then(function (data) {
+        data.forEach(function (d) {
+            d.date = parseTime(d.date);
+            d.new_cases = +d.new_cases;
+
+
+        });
+
+
+        x.domain(d3.extent(data, function (d) { return d.date; }));
+        y.domain(d3.extent(data, function (d) { return d.new_cases; }));
+
+        g.append('g')
+            .attr('transform', 'translate(0,' + height + ')')
+            .call(d3.axisBottom(x).ticks( d3.timeMonth.every(2)))
+            .select('.domain')
+            .remove();
+
+        g.append('g')
+            .call(d3.axisLeft(y))
+            .append('text')
+            .attr('fill', '#000')
+            .attr('transform', 'rotate(-90)')
+            .attr('y', 6)
+            .attr('dy', '0.71em')
+            .attr('text-anchor', 'end')
+            .text('New Cases per 100k');
+
+        g.append('path')
+            .datum(data)
+            .attr('fill', 'none')
+            .attr('stroke', 'steelblue')
+            .attr('stroke-linejoin', 'round')
+            .attr('stroke-linecap', 'round')
+            .attr('stroke-width', 1.5)
+            .attr('d', line);
+    });
+
+
+}
+function return_class(d){
+    cl="dots "
+    if(d.pop_density > pop_rankings[state_sel]['high']){
+        cl+="top-10 ";
+    }
+    else if(d.pop_density < pop_rankings[state_sel]['low'] ){
+        cl+="bottom-10 ";
+    }
+    else{
+        cl+= "noise ";
+    }
+    if(d.isatop){
+        cl+="top-county ";
+    }
+    return cl;
+     
+}
 function plotScatter(y_sel, month_sel, state_sel) {
     // Get the data
 
@@ -224,22 +279,20 @@ function plotScatter(y_sel, month_sel, state_sel) {
 
     // ALL YEAR
     filename = (month_sel == 0) ? "data-yearly.csv" : "data-monthly.csv";
-    d3.csv(filename).then(function (olddata) {
+    d3.csv(filename).then(function (data) {
         popfilter = parseInt($("#pop-filter").val());
-
         if (state_sel == "ALL") {
             if (month_sel == 0) {
-                data = olddata.filter(function (d) {
+                var data = data.filter(function (d) {
 
                     if (d.pop_density > popfilter) {
-
                         return d;
                     }
 
                 });
             }
             else {
-                data = olddata.filter(function (d) {
+                data = data.filter(function (d) {
 
                     if (d.month == month_sel && d.pop_density > popfilter) {
 
@@ -251,7 +304,7 @@ function plotScatter(y_sel, month_sel, state_sel) {
         }
         else {
             if (month_sel == 0) {
-                data = olddata.filter(function (d) {
+                data = data.filter(function (d) {
 
                     if (d.pop_density > popfilter && d.region == state_sel) {
 
@@ -261,7 +314,7 @@ function plotScatter(y_sel, month_sel, state_sel) {
                 });
             }
             else {
-                data = olddata.filter(function (d) {
+                data = data.filter(function (d) {
 
                     if (d.month == month_sel && d.region == state_sel && d.pop_density > popfilter) {
                         return d;
@@ -271,56 +324,108 @@ function plotScatter(y_sel, month_sel, state_sel) {
             }
         }
         data = data.filter(function (d) { return d[y_sel] != '' });
-        
-        // Code to rank them.
 
-        // var len=data.length
-        // var caseindices = new Array(len);
-        // for (var i = 0; i < len; ++i) caseindices[i] = i;
-        // caseindices.sort(function (a, b) { return data[a]['casesper100k'] < data[b]['casesper100k'] ? -1 :data[a]['casesper100k'] > data[b]['casesper100k'] ? 1 : 0; });
-
-        // var y_selindices = new Array(len);
-        // for (var i = 0; i < len; ++i) y_selindices[i] = i;
-        // y_selindices.sort(function (a, b) { return data[a][y_sel] < data[b][y_sel] ? -1 :data[a][y_sel] > data[b][y_sel] ? 1 : 0; });
-
-        // for (var j=0;j<len;j++){
-        //     data[j].casesindices= caseindices[j];
-        //     data[j]["y_selindices"]= y_selindices[j];
-        // }
-        // format the data
-
-        data.forEach(function (d, i) {
+         //format the data
+        console.log(data);
+         data.forEach(function (d, i) {
 
             d.casesper100k = +d.casesper100k;
             d[y_sel] = +d[y_sel];
-
+            console.log(d.casesindices);
 
         });
+       // Code to rank them.
+
+        var len=data.length
+        var caseindices_ = new Array(len);
+        for (var i = 0; i < len; ++i) caseindices_[i] = i;
+        caseindices_.sort(function (a, b) { return data[a]['casesper100k'] < data[b]['casesper100k'] ? -1 :data[a]['casesper100k'] > data[b]['casesper100k'] ? 1 : 0; });
+        var caseindices = new Array(len);
+        for (var i = 0; i < len; ++i) caseindices[i] = i;
+        caseindices.sort(function (a, b) { return caseindices_[a]< caseindices_[b]? -1 : caseindices_[a]> caseindices_[b] ? 1 : 0; });
+        var y_selindices_ = new Array(len);
+        for (var i = 0; i < len; ++i) y_selindices_[i] = i;
+        y_selindices_.sort(function (a, b) { return data[a][y_sel] < data[b][y_sel] ? -1 :data[a][y_sel] > data[b][y_sel] ? 1 : 0; });
+        var y_selindices = new Array(len);
+        for (var i = 0; i < len; ++i) y_selindices[i] = i;
+        y_selindices.sort(function (a, b) { return y_selindices_[a] < y_selindices_[b] ? -1 :y_selindices_[a] > y_selindices_[b] ? 1 : 0; });
+
+        for (var j=0;j<len;j++){
+          data[j]['casesindices']= caseindices[j];
+          data[j]["y_selindices"]= y_selindices[j];
+
+        }
+        top_counties=[]
+        
+        if(len>10){
+            if( len<100){
+                pct=len*0.1;
+            }
+            else{
+                pct=len*0.1;
+            }
+            
+            data
+            .filter(function(d){
+                return (d.casesindices<pct) && (d.y_selindices>(len-pct))})
+                .forEach(function(d){
+                    top_counties.push(d.fips);
+                
+                })
+            
+        }
+        data.forEach(function (d, i) {
+
+            d.isatop=top_counties.includes(d.fips);
+
+        });
+       
 
         // Scale the range of the data
-        x.domain([0, d3.max(data, function (d) { return d.casesper100k; })]);
+       x.domain([0, d3.max(data, function (d) { return d.casesper100k; })]);
+    //    console.log(d3.mean(data, function (d) { return d['casesper100klog']; }))
+       // x.domain([(d3.max(data, function (d) { return d['casesper100klog']; })- 2*d3.mean(data, function (d) { return d['casesper100klog']; })),d3.max(data, function (d) { return d['casesper100klog']; })]);
+       y.domain(d3.extent(data,function(d){return d[y_sel]})) 
+       // y.domain([(d3.max(data, function (d) { return d[y_sel]; })- 2*d3.mean(data, function (d) { return d[y_sel]; })),d3.max(data, function (d) { return d[y_sel]; })]);
 
-        y.domain(d3.extent(data, function (d) { return d[y_sel]; }));
-
-        dots = svg.selectAll("circle").data(data);
+        dots = svg.selectAll(".dots").data(data);
+        console.log(top_counties)
         // console.log(dots.exit());
         // Add the scatterplot
         dots
             .enter()
-            .append("circle")
+            .append("path")
+
+            .attr("class","dots")
             .merge(dots)
             .transition()
-            .attr("r", 5)
-            .attr("class", function (d) { return d.pop_density > pop_rankings[state_sel]['high'] ? "top-10" : (d.pop_density < pop_rankings[state_sel]['low'] ? "bottom-10" : "noise") })
-            .attr("cx", function (d) { return x(d.casesper100k); })
-            .attr("cy", function (d) { return y(d[y_sel]); });
+            .attr("d", symbol.type(
+                function(d){
+                    if (d.isatop){
+                        return d3.symbolStar;
+                    }
+                    else{
+                        return d3.symbolCircle;
+                    }
+                }
+            ))
+            .attr('transform',function(d){ return "translate("+x(d.casesper100k)+","+y(d[y_sel])+")"; })
+            .attr("class", d=>return_class(d));
+            
+            //  .attr("x", function (d) { return x(d.casesper100k); })
+            //.attr("y", function (d) { return y(d[y_sel]); });
         dots.on("mouseover", function (d) {
+            div.attr("style", {'display':'block'});
             div.transition()
                 .duration(200)
                 .style("opacity", 0.9);
             div.html(d.county + ", " + d.state)
                 .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 28) + "px");
+                .style("top", (d3.event.pageY - 28) + "px")
+            .on("mouseout",function(d){
+                div.attr("style", {'display':'none'});
+                div.html("");
+            });
             get_stats(d);
             plotLine(d.fips)
 
@@ -347,53 +452,21 @@ function plotScatter(y_sel, month_sel, state_sel) {
             .attr("y2", height*y_pos)
         x_axis.transition().call(d3.axisBottom(x))
         y_axis.transition().call(d3.axisLeft(y))
-        y_title.text(yTitles[y_sel]);
+        y_title.text(yTitles[y_sel]+' (%)');
+        console.log(data);
+
         return data;
-    });
+    })
+    
 }
-// Which covariate
-setTimeout(()=>$("#all-year").click(),1000);
-var y_sel = $('select').val();
-var month_sel = 1;
-var state_sel = "ALL";
-plotScatter(y_sel, month_sel, state_sel);
 
-$('select#type-y').on('change', function () {
-    y_sel = $('#type-y').val();
+function get_stats(d) {
+    $("#countyname").html(d.county + ", " + d.state);
+    $("#pop_density").html(String(Math.round(d.pop_density * 10) / 10) + " per sq. mile");
+    $("#pop").html(String(formatComma(Math.round(d.pop * 10) / 10)));
+    $("#median_income").html(String(formatComma(Math.round(d.median_income * 10) / 10)) + " $");
+    $("#median_age").html(String(Math.round(d.median_age * 10) / 10) + " years");
+    $("#pct_min").html(String(Math.round(d.pct_min * 10) / 10) + " %");
+    $("#over60").html(String(Math.round(d.over60 * 10) / 10) + " %");
 
-    plotScatter(y_sel, month_sel, state_sel);
-
-});
-$('select#state').on('change', function () {
-    state_sel = $('#state').val();
-
-    plotScatter(y_sel, month_sel, state_sel);
-
-});
-$("div#month-sel-buttons>div").click(function () {
-    $(".date").removeClass("date-selected");
-    $(this).addClass("date-selected");
-    month_sel = parseInt($(this).attr("data-value"));
-    plotScatter(y_sel, month_sel, state_sel);
-
-});
-$("#pop-filter").on("change", function () {
-    plotScatter(y_sel, month_sel, state_sel);
-})
-
-$("#dragger").draggabilly({
-    containment: '#month-sel'
-    // options...
-})
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-  
-$("#play-icon").click(function() {
-    $('.date').each(async function(i) {
-        await sleep(800*i++);
-            $(this).click();
-            
-     })
-  });
+}

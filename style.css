@@ -1,4 +1,10 @@
 /* Desktop */
+/* *{
+    border: 1px solid black;
+} */
+body{
+    height: 100vh
+}
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
 *{
     font-family: 'Playfair Display', serif;
@@ -20,8 +26,10 @@ div.tooltip {
 }
 
 .date{
-    border-left: 1px solid black;
+    /* border-left: 1px solid black; */
+    min-width: 8%;
     padding: 1%;
+    width: fit-content;
     text-align: center;
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
@@ -37,34 +45,49 @@ div.tooltip {
     border: 2px solid black;
     padding: 1%;
 }
-#month-sel{
-    margin:auto;
-    width: 60%;
+#center-container{
+    text-align: center;
 }
-#month-sel-header{
-    font-size: large;
-    font-weight: bold;
+#month-sel{
+    text-align: center;
+    margin:auto;
+    width: 90%;
+    
+}
+
+#month-sel-buttons{
+    font-size: medium;
+    margin: auto;
+    display: flex;
     text-align: left;
-    margin-left: -2%;
+    width: 100%;
+    
+}
+#month-sel-buttons>*{
+  /* min-width:8%; */
+  /* min-width: 50px; */
 }
 #filters{
     margin: auto;
     padding: 1%;
-   border-right: 2px solid black;
+   /* border-right: 2px solid black; */
 }
 #filters-inputs{
-    text-align: center;
+    /* text-align: center; */
 }
 #filters-inputs>div{
     margin:2%
 }
 #container-scatter{
     text-align: center;
-    border-right: 2px solid black;
+    /* border-right: 2px solid black; */
 }
 .stats{
-    border-bottom: 1px dashed black;
+    /* border-bottom: 1px dashed black; */
     padding: 2%;
+}
+.stats table{
+    width:100%
 }
 .stats-header{
     font-size: large;
@@ -77,20 +100,20 @@ div.tooltip {
     margin: auto;
 }
 #cases-line{
-    text-align: center;
+    /* text-align: center; */
 }
 .top-10{
     fill: lightblue;
     stroke: black;
-    stroke-width: 1px;
-    transform:scale(1.2, 1.2);
+    stroke-width: 2px;
+    /* transform:scale(1.2, 1.2); */
     opacity: 100%;
 }
 .bottom-10 {
     fill: yellowgreen;
     stroke: black;
-    stroke-width: 1px;
-    transform:scale(1.2, 1.2);
+    stroke-width: 2px;
+    /* transform:scale(1.2, 1.2); */
     opacity: 100%;
 }
 .noise{
@@ -106,5 +129,25 @@ div.tooltip {
     
 }
 #scatter-legend{
-    margin-top: -40%;
+    
+}
+footer{
+    text-align: center;
+    position: relative;
+    width:100%;
+    left:0;
+    bottom:0;
+    margin-bottom: 0px;
+    font-size:1.2em;
+}
+a{
+    text-decoration: none;
+}
+.top-county{
+    stroke: slateblue;
+    stroke-width: 5px;
+    opacity: 100%;
+}
+#left-container>*{
+    padding-top: 5%;
 }
