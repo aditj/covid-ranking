@@ -38,7 +38,7 @@
                                 <select name="type" id="type-y">
                                     <option value="spend_all">Spending Data</option>
                                     <option value="emp_combined">Employment Data</option>
-                                    <option value="revenue_all">Merchant Data</option>
+                                    <option value="revenue_all">Merchant Income Data</option>
                                 </select>  
                             </td>
                         </tr>
@@ -108,7 +108,12 @@
                                 Population Density:
                             </td>
                             <td>
-                                <input type="range" name="popfilter" id="pop-filter" min=0 max=17000 value=0>
+                                <!-- <input type="range" name="popfilter" id="pop-filter" min=0 max=17000 value=0> -->
+                                <select name="popfilter" id="pop-filter">
+                                    <option value="low">Low Population Density (Less than 1000)</option>
+                                    <option value="med">Medium Population Density (1000-3000)</option>
+                                    <option value="high">High Population Density (3000+)</option>
+                                </select>
                             </td>
                         </tr>
                     </table>
@@ -130,7 +135,7 @@
                                         <td>
                                             Population Density
                                         </td>
-                                        <td>
+                                        <td class="stats-data">
                                             <span id="pop_density" class="stats-content">
                                         
                                             </span>
@@ -140,7 +145,7 @@
                                         <td>
                                             Total Population
                                         </td>
-                                        <td>
+                                        <td class="stats-data">
                                             <span id="pop" class="stats-content">
                                         
                                             </span>
@@ -150,7 +155,7 @@
                                         <td>
                                             Median Income
                                         </td>
-                                        <td>
+                                        <td class="stats-data">
                                             <span id="median_income" class="stats-content">
                                         
                                             </span>
@@ -163,20 +168,20 @@
                             <div class='col-sm-6'>
                                 <table>
                                     <tr>
-                                        <td>
+                                        <td >
                                             % Minority Population
                                         </td>
-                                        <td>
+                                        <td class="stats-data">
                                             <span id="pct_min" class="stats-content">
                                         
                                             </span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>
+                                        <td >
                                             Median Age
-                                        </td>
-                                        <td>
+                                        </td >
+                                        <td class="stats-data">
                                             <span id="median_age" class="stats-content">
                                         
                                             </span>
@@ -186,7 +191,7 @@
                                         <td>
                                             % Population over 60
                                         </td>
-                                        <td>
+                                        <td class="stats-data">
                                             <span id="over60" class="stats-content">
                                         
                                             </span>

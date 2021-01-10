@@ -79,11 +79,15 @@ svg2.append("path")
 .attr("d",symbol.type(d3.symbolStar))
 .attr("class" , 'top-county')
 .attr("transform","translate(15,225)");
-svg2.append("text").attr("x", 30).attr("y", 130).text("Top 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 30).attr("y", 160).text("Bottom 5 Populous Counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 130).text("5 most populous counties").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 160).text("5 least populous counties").style("font-size", "14px").attr("alignment-baseline","middle")
 svg2.append("text").attr("x", 30).attr("y", 180).text("Other Counties").style("font-size", "14px").attr("alignment-baseline","middle")
 svg2.append("text").attr("x", 30).attr("y", 200).text("Medians of respective Axes").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 30).attr("y", 230).text("Good Performing Counties*").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 230).text("Counties with the best health").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("id","definition-link").attr("x", 30).attr("y", 245).text("and wealth balance *").style("font-size", "14px").attr("alignment-baseline","middle")
+.on("click",function(){
+    window.open("https://github.com/aditj/covid-ranking#definitions"); 
+})
 
 // Axes
 // Add the X Axis
@@ -280,21 +284,40 @@ function plotScatter(y_sel, month_sel, state_sel) {
     // ALL YEAR
     filename = (month_sel == 0) ? "data-yearly.csv" : "data-monthly.csv";
     d3.csv(filename).then(function (data) {
-        popfilter = parseInt($("#pop-filter").val());
+        popfilter = $("#pop-filter").val();
+        switch(popfilter){
+            case "low":
+                var data = data.filter(function (d) {
+                    if(d.pop_density<1000){
+                        return d;
+                    }
+            });
+            break;
+            case "med":
+                var data = data.filter(function (d) {
+                    if((d.pop_density>1000) && (d.pop_density<3000)){
+                        return d;
+                    }
+            });
+            break;
+            case "high":
+                var data = data.filter(function (d) {
+                    if(d.pop_density>3000){
+                        return d;
+
+                    }
+            });
+                }
         if (state_sel == "ALL") {
             if (month_sel == 0) {
                 var data = data.filter(function (d) {
-
-                    if (d.pop_density > popfilter) {
                         return d;
-                    }
-
                 });
             }
             else {
                 data = data.filter(function (d) {
 
-                    if (d.month == month_sel && d.pop_density > popfilter) {
+                    if (d.month == month_sel) {
 
                         return d;
                     }
@@ -306,7 +329,7 @@ function plotScatter(y_sel, month_sel, state_sel) {
             if (month_sel == 0) {
                 data = data.filter(function (d) {
 
-                    if (d.pop_density > popfilter && d.region == state_sel) {
+                    if (d.region == state_sel) {
 
                         return d;
                     }
@@ -316,7 +339,7 @@ function plotScatter(y_sel, month_sel, state_sel) {
             else {
                 data = data.filter(function (d) {
 
-                    if (d.month == month_sel && d.region == state_sel && d.pop_density > popfilter) {
+                    if (d.month == month_sel && d.region == state_sel) {
                         return d;
                     }
 
@@ -326,12 +349,10 @@ function plotScatter(y_sel, month_sel, state_sel) {
         data = data.filter(function (d) { return d[y_sel] != '' });
 
          //format the data
-        console.log(data);
          data.forEach(function (d, i) {
 
             d.casesper100k = +d.casesper100k;
             d[y_sel] = +d[y_sel];
-            console.log(d.casesindices);
 
         });
        // Code to rank them.
@@ -389,7 +410,6 @@ function plotScatter(y_sel, month_sel, state_sel) {
        // y.domain([(d3.max(data, function (d) { return d[y_sel]; })- 2*d3.mean(data, function (d) { return d[y_sel]; })),d3.max(data, function (d) { return d[y_sel]; })]);
 
         dots = svg.selectAll(".dots").data(data);
-        console.log(top_counties)
         // console.log(dots.exit());
         // Add the scatterplot
         dots
@@ -453,7 +473,6 @@ function plotScatter(y_sel, month_sel, state_sel) {
         x_axis.transition().call(d3.axisBottom(x))
         y_axis.transition().call(d3.axisLeft(y))
         y_title.text(yTitles[y_sel]+' (%)');
-        console.log(data);
 
         return data;
     })
