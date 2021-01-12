@@ -80,9 +80,11 @@ div.tooltip {
 }
 #filters-inputs>div{
     margin:2%
+
 }
 #container-scatter{
     text-align: center;
+    margin: auto;
     /* border-right: 2px solid black; */
 }
 .stats{
@@ -138,20 +140,16 @@ footer{
     text-align: center;
     grid-row-start: 2;
     grid-row-end: 3;
-    /* position: relative; */
     width:100%;
-    /* left:0;
-    bottom:0; */
-    /* height: 50px;
-  margin-top: -50px; */
-    font-size:1.2em;
+   margin-top: 20px;
+    font-size:1em;
 }
 a{
     text-decoration: none;
 }
 .top-county{
     stroke: slateblue;
-    stroke-width: 5px;
+    stroke-width: 4px;
     opacity: 100%;
 }
 #left-container>*{
@@ -169,4 +167,19 @@ font-style: italic;
 }
 #definition-link:hover{
     cursor:pointer;
+}
+
+.svg-container {
+    display: inline-block;
+    position: relative;
+    width: 90%;
+    padding-bottom: 100%; /* aspect ratio */
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    /* top: 10px; */
+    left: 0;
 }

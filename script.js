@@ -3,16 +3,16 @@ var y_sel = $('select').val();
     var state_sel = "ALL";
 $(document).ready(function(){
     var y_sel = $('select').val();
-    var month_sel = 0;
+    var month_sel = 11;
     var state_sel = "ALL";
-    $("#month-sel").val(0);
+    $("#month-sel").val(11);
     $("#month-sel").trigger("change");
     plotScatter(y_sel, month_sel, state_sel);
     plotLine(10001)
 })
 $('select').prop('selectedIndex', 0); // Reset Select
 // Setting Dimensions for Scatter Plot
-var margin = { top: 20, right: 20, bottom: 100, left: 20 },
+var margin = { top: 20, right: 20, bottom: 120, left: 20 },
     width = 600 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 // Set the range
@@ -45,9 +45,11 @@ $.ajax({
     success: function (data) { pop_rankings = data }
 });
 
-var svg = d3.select("#container-scatter").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+var svg = d3.select("#container-scatter").classed("svg-container", true).append("svg")
+.attr("preserveAspectRatio", "xMinYMin meet")
+.attr("viewBox", `0 0 600 600`)
+//class to make it responsive
+.classed("svg-content-responsive", true)
     .attr("id", "scatter")
     .append("g")
     .attr("transform",
@@ -69,25 +71,31 @@ svg2= d3.select("#container-legend")
 svg2.append("text").attr("x", 0).attr("y", 95).text("Legend").style("font-size", "20px").attr("alignment-baseline","middle")
 svg2.append("circle").attr("cx",10).attr("cy",125).attr("r", 5).attr("class","top-10");
 svg2.append("circle").attr("cx",10).attr("cy",155).attr("r", 5).attr("class","bottom-10");
+
 svg2.append("circle").attr("cx",10).attr("cy",175).attr("r", 5).attr("class","noise");
-svg2.append("line")
-.attr("y1", 200)
-.attr("x2", 20) 
-.attr("y2", 200)
-.attr("class","median-lines");
 svg2.append("path")
 .attr("d",symbol.type(d3.symbolStar))
 .attr("class" , 'top-county')
-.attr("transform","translate(15,225)");
+.attr("transform","translate(10,200)");
+svg2.append("line")
+.attr("x1",0)
+.attr("y1", 237)
+.attr("x2", 20) 
+.attr("y2", 237)
+.attr("class","median-lines");
+
+
 svg2.append("text").attr("x", 30).attr("y", 130).text("5 most populous counties").style("font-size", "14px").attr("alignment-baseline","middle")
 svg2.append("text").attr("x", 30).attr("y", 160).text("5 least populous counties").style("font-size", "14px").attr("alignment-baseline","middle")
 svg2.append("text").attr("x", 30).attr("y", 180).text("Other Counties").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 30).attr("y", 200).text("Medians of respective Axes").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("x", 30).attr("y", 230).text("Counties with the best health").style("font-size", "14px").attr("alignment-baseline","middle")
-svg2.append("text").attr("id","definition-link").attr("x", 30).attr("y", 245).text("and wealth balance *").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("x", 30).attr("y", 200).text("Counties with the best health").style("font-size", "14px").attr("alignment-baseline","middle")
+svg2.append("text").attr("id","definition-link").attr("x", 30).attr("y", 215).text("and wealth balance *").style("font-size", "14px").attr("alignment-baseline","middle")
 .on("click",function(){
     window.open("https://github.com/aditj/covid-ranking#definitions"); 
 })
+svg2.append("text").attr("x", 30).attr("y", 240).text("Medians").style("font-size", "14px").attr("alignment-baseline","middle")
+
+
 
 // Axes
 // Add the X Axis
@@ -306,7 +314,11 @@ function plotScatter(y_sel, month_sel, state_sel) {
                         return d;
 
                     }
+
             });
+            break;
+            case "all":
+                break;
                 }
         if (state_sel == "ALL") {
             if (month_sel == 0) {
@@ -352,7 +364,7 @@ function plotScatter(y_sel, month_sel, state_sel) {
          data.forEach(function (d, i) {
 
             d.casesper100k = +d.casesper100k;
-            d[y_sel] = +d[y_sel];
+            d[y_sel] = +100*d[y_sel];
 
         });
        // Code to rank them.
@@ -480,7 +492,7 @@ function plotScatter(y_sel, month_sel, state_sel) {
 }
 
 function get_stats(d) {
-    $("#countyname").html(d.county + ", " + d.state);
+    $("#countyname").html(d.county + " County, " + d.state);
     $("#pop_density").html(String(Math.round(d.pop_density * 10) / 10) + " per sq. mile");
     $("#pop").html(String(formatComma(Math.round(d.pop * 10) / 10)));
     $("#median_income").html(String(formatComma(Math.round(d.median_income * 10) / 10)) + " $");
