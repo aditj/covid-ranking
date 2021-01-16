@@ -3,9 +3,9 @@ var y_sel = $('select').val();
     var state_sel = "ALL";
 $(document).ready(function(){
     var y_sel = $('select').val();
-    var month_sel = 11;
+    var month_sel = 12;
     var state_sel = "ALL";
-    $("#month-sel").val(11);
+    $("#month-sel").val(12);
     $("#month-sel").trigger("change");
     plotScatter(y_sel, month_sel, state_sel);
     plotLine(10001)

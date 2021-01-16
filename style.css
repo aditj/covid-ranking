@@ -54,7 +54,7 @@ div.tooltip {
 #month-sel{
     text-align: center;
     margin:auto;
-    width: 90%;
+    width: 100%;
     
 }
 
@@ -160,10 +160,10 @@ a{
     font-size: 10px;
 }
 .stats-data>span{
-    font-size: 10px;
+    font-size: 14px;
 }
 #definition-link{
-font-style: italic;
+    text-decoration: dotted underline;
 }
 #definition-link:hover{
     cursor:pointer;
@@ -182,4 +182,8 @@ font-style: italic;
     position: absolute;
     /* top: 10px; */
     left: 0;
+}
+table{
+    border-collapse: separate;
+    border-spacing: 0 1em;
 }
