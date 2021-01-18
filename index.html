@@ -36,9 +36,10 @@
                             </td>
                             <td>
                                 <select name="type" id="type-y">
-                                    <option value="spend_all">Spending Data</option>
-                                    <option value="emp_combined">Employment Data</option>
+                                    <option value="spend_all">Consumer Spending Data</option>
                                     <option value="revenue_all">Merchant Income Data</option>
+                                    <!-- <option value="emp_combined">Employment Data</option> -->
+
                                 </select>  
                             </td>
                         </tr>
@@ -110,10 +111,11 @@
                             <td>
                                 <!-- <input type="range" name="popfilter" id="pop-filter" min=0 max=17000 value=0> -->
                                 <select name="popfilter" id="pop-filter">
+                                    <option value="all" selected>All Areas</option>
                                     <option value="low">Low Population Density (Less than 1000)</option>
                                     <option value="med">Medium Population Density (1000-3000)</option>
                                     <option value="high">High Population Density (3000+)</option>
-                                    <option value="all">All Areas</option>
+                                    
                                 </select>
                             </td>
                         </tr>

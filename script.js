@@ -3,16 +3,16 @@ var y_sel = $('select').val();
     var state_sel = "ALL";
 $(document).ready(function(){
     var y_sel = $('select').val();
-    var month_sel = 12;
+    var month_sel = 0;
     var state_sel = "ALL";
-    $("#month-sel").val(12);
+    $("#month-sel").val(0);
     $("#month-sel").trigger("change");
     plotScatter(y_sel, month_sel, state_sel);
     plotLine(10001)
 })
 $('select').prop('selectedIndex', 0); // Reset Select
 // Setting Dimensions for Scatter Plot
-var margin = { top: 20, right: 20, bottom: 120, left: 20 },
+var margin = { top: 20, right: 20, bottom: 120, left: 30 },
     width = 600 - margin.left - margin.right,
     height = 600 - margin.top - margin.bottom;
 // Set the range
@@ -108,7 +108,8 @@ svg.append("text")
         "translate(" + (width / 2) + " ," +
         (height + 50) + ")")
     .style("text-anchor", "middle")
-    .text("Covid Cases per 100k");
+    .text("Covid Cases per 100k")
+    .attr("font-size",20);
 
 
 // Add the Y Axis
@@ -123,8 +124,9 @@ y_title=svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left)
     .attr("x", 0 - (height / 2))
-    .attr("dy", "1em")
-    .style("text-anchor", "middle");
+    .attr("dy", "20px")
+    .style("text-anchor", "middle")
+    .attr("font-size",20);
 // // Better and Worse 
 // svg.append("text")
 //     .attr("y",0)
@@ -142,20 +144,20 @@ y_title=svg.append("text")
 // Median Lines
 y_pos=0;
 cases_pos=0;
-vertical_median=svg.append("line")
-    .attr("x1", cases_pos*width) 
-    .attr("y1", 0)
-    .attr("x2", cases_pos*width) 
-    .attr("y2", height)
-    .attr("class","median-lines");
+// vertical_median=svg.append("line")
+//     .attr("x1", cases_pos*width) 
+//     .attr("y1", 0)
+//     .attr("x2", cases_pos*width) 
+//     .attr("y2", height)
+//     .attr("class","median-lines");
 
 
-horizontal_median=svg.append("line")
-    .attr("x1", 0) 
-    .attr("y1", height*y_pos)
-    .attr("x2", width) 
-    .attr("y2", height*y_pos)
-    .attr("class","median-lines");
+// horizontal_median=svg.append("line")
+//     .attr("x1", 0) 
+//     .attr("y1", height*y_pos)
+//     .attr("x2", width) 
+//     .attr("y2", height*y_pos)
+//     .attr("class","median-lines");
 
 
 
@@ -473,17 +475,20 @@ function plotScatter(y_sel, month_sel, state_sel) {
 
         cases_pos = x(d3.median(data, d => d.casesper100k)) / x(d3.max(data, d => d.casesper100k));
         y_pos = y(d3.median(data, d => d[y_sel])) / y(d3.min(data, d => d[y_sel]));
-        vertical_median.transition().attr("x1", cases_pos*width) 
-        .attr("y1", 0)
-        .attr("x2", cases_pos*width) 
-        .attr("y2", height)
-        horizontal_median.transition()
-            .attr("x1", 0) 
-            .attr("y1", height*y_pos)
-            .attr("x2", width) 
-            .attr("y2", height*y_pos)
+        // vertical_median.transition()
+        //     .attr("x1", cases_pos*width) 
+        //     .attr("y1", 0)
+        //     .attr("x2", cases_pos*width) 
+        //     .attr("y2", height)
+        // horizontal_median.transition()
+        //     .attr("x1", 0) 
+        //     .attr("y1", height*y_pos)
+        //     .attr("x2", width) 
+        //     .attr("y2", height*y_pos)
         x_axis.transition().call(d3.axisBottom(x))
+        .attr("transform", "translate(0,"+(height*y_pos)+" )");
         y_axis.transition().call(d3.axisLeft(y))
+        .attr("transform", "translate("+cases_pos*width+", 0)");
         y_title.text(yTitles[y_sel]+' (%)');
 
         return data;
