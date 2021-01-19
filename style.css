@@ -129,7 +129,7 @@ div.tooltip {
     
         stroke-width: 2px;
         stroke: black;
-        stroke-dasharray: 5;
+        /* stroke-dasharray: 5; */
         opacity: 40%;
     
 }
@@ -186,4 +186,7 @@ a{
 table{
     border-collapse: separate;
     border-spacing: 0 1em;
+}
+.x-axis{
+    z-index:1001;
 }

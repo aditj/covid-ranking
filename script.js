@@ -68,7 +68,7 @@ svg2= d3.select("#container-legend")
 .attr("height", 220 + margin.top + margin.bottom)
 .attr("id", "scatter-legend")
 //svg2=    d3.select("#container-scatter>svg").append("g")
-svg2.append("text").attr("x", 0).attr("y", 95).text("Legend").style("font-size", "20px").attr("alignment-baseline","middle")
+// svg2.append("text").attr("x", 0).attr("y", 95).text("Legend").style("font-size", "20px").attr("alignment-baseline","middle")
 svg2.append("circle").attr("cx",10).attr("cy",125).attr("r", 5).attr("class","top-10");
 svg2.append("circle").attr("cx",10).attr("cy",155).attr("r", 5).attr("class","bottom-10");
 
@@ -101,7 +101,8 @@ svg2.append("text").attr("x", 30).attr("y", 240).text("Medians").style("font-siz
 // Add the X Axis
 x_axis = svg.append("g")
     .attr("transform", "translate(0," + Math.abs(height / 2) + ")")
-    .call(d3.axisBottom(x));
+    .classed("x-axis")
+    .call(d3.axisBottom(x))    ;
 // X axis label
 svg.append("text")
     .attr("transform",
@@ -109,7 +110,8 @@ svg.append("text")
         (height + 50) + ")")
     .style("text-anchor", "middle")
     .text("Covid Cases per 100k")
-    .attr("font-size",20);
+    .attr("font-size",20)
+    ;
 
 
 // Add the Y Axis
@@ -486,6 +488,7 @@ function plotScatter(y_sel, month_sel, state_sel) {
         //     .attr("x2", width) 
         //     .attr("y2", height*y_pos)
         x_axis.transition().call(d3.axisBottom(x))
+        .attr("class","x-axis")
         .attr("transform", "translate(0,"+(height*y_pos)+" )");
         y_axis.transition().call(d3.axisLeft(y))
         .attr("transform", "translate("+cases_pos*width+", 0)");
