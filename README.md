@@ -18,4 +18,4 @@ Project focussed on rating the response of different counties of the United Stat
 
 ## Definitions 
    1. Counties with best health and wealth outcomes are defined as being in both the categories:
-      a) The top 10% of the economic outcome and the top 10% of the covid cases. 
+      a) The top 10% of the economic outcome and the bottom 10% of the covid cases. 
