@@ -101,8 +101,7 @@ svg2.append("text").attr("x", 30).attr("y", 240).text("Medians").style("font-siz
 // Add the X Axis
 x_axis = svg.append("g")
     .attr("transform", "translate(0," + Math.abs(height / 2) + ")")
-    .classed("x-axis")
-    .call(d3.axisBottom(x))    ;
+    .call(d3.axisBottom(x));
 // X axis label
 svg.append("text")
     .attr("transform",
@@ -110,8 +109,7 @@ svg.append("text")
         (height + 50) + ")")
     .style("text-anchor", "middle")
     .text("Covid Cases per 100k")
-    .attr("font-size",20)
-    ;
+    .attr("font-size",20);
 
 
 // Add the Y Axis
